@@ -58,5 +58,46 @@ public class PointVisible extends Rectangle {
 		
 	}
 	
+	public int mtovX(int x0 , int y0 , int w , int h , double maxX , double minX , double maxY , double minY)
+	{
+		double a = w / (maxX - minX);
+		double b =  x0 - w*minX/(maxX - minX);
+		double c = h /(minY - maxY);
+		double d = y0 - (h * maxY)/(minY - maxY);
+		
+		return (int) ( (P.getX() * a)  + b ) ; 
+	}
 	
+	public int mtovY(int x0 , int y0 , int w , int h , double maxX , double minX , double maxY , double minY)
+	{
+		double a = w / (maxX - minX);
+		double b =  x0 - w*minX/(maxX - minX);
+		double c = h /(minY - maxY);
+		double d = y0 - (h * maxY)/(minY - maxY);
+		
+		return (int) ( (P.getY() * c)  + d ) ; 
+	}
+	
+	
+	public void rotation(double theta)
+	{
+		this.P.setLocation(P.getX() * (Math.cos(theta) - Math.sin(theta)), 
+						   P.getY() * (Math.sin(theta) + Math.cos(theta)));
+	}
+	public void symetrieOrthogonaleOx()
+	{
+		this.P.setLocation(  this.P.getX(),
+							-this.P.getY());	
+	}
+	
+	public void symetrieOrthogonaleOy()
+	{
+		this.P.setLocation( -this.P.getX(), 
+							 this.P.getY());
+	}
+	
+	public void homothetie(double r)
+	{
+		this.P.setLocation(this.P.getX() * r , this.P.getY() * r);
+	}
 }

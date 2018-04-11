@@ -61,6 +61,8 @@ public class Coordonees extends AffineTransform  {
 		System.out.println("Calcul mat tranfo...");
 		
 		
+
+		
 		/*
 		 * viewport -> modele 
 		a = (xmaxmodel - xminmodel)/w
