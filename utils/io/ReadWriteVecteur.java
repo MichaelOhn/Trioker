@@ -35,7 +35,7 @@ public class ReadWriteVecteur {
 		return segments;
 	}
 
-	// suppose que le fichier contient des paquets de 4 lignes de coordonnées...
+	// suppose que le fichier contient des paquets de 4 lignes de coordonnees...
 	Vecteur readLine(String aLine, int i) {
 		Scanner scanner = new Scanner(aLine);
 		scanner.useDelimiter(";");

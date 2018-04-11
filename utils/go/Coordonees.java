@@ -1,6 +1,7 @@
 package utils.go;
 
 import java.awt.geom.AffineTransform;
+0import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
@@ -60,18 +61,12 @@ public class Coordonees extends AffineTransform  {
 		d = y0ecran - ((h*xmaxmodel)/(yminmodel-ymaxmodel));
 		System.out.println("Calcul mat tranfo...");
 		
-		
-
-		
-		/*
-		 * viewport -> modele 
+		/* viewport -> modele 
 		a = (xmaxmodel - xminmodel)/w
-	
-		????
-	
-		????
-		
-		 */
+		b = ????
+		c = ????
+		d = ????
+		*/
 	}
 	
 	void modelToViewport(PointVisible p){
@@ -82,12 +77,22 @@ public class Coordonees extends AffineTransform  {
 	public void upadteArrayPoint(ArrayList<PointVisible> list) {
 		CalculMinMax(list);
 		CalculCoeffMatTransfo();
+
 		for(int i = 0; i<list.size(); i++) {
-			modelToViewport(list.get(i));
-			list.get(i).print();
-			list.set(i, new PointVisible(xp,yp));
-			System.out.print("new point : ");
-			new PointVisible(xp,yp).print();
+			System.out.println("Point avant la transfo : "+list.get(i).x+", "+list.get(i).y);
+			PointVisible p = new PointVisible(list.get(i).x-400,list.get(i).y-400);
+			double[] mat =     {a, 0, b, 
+								0, c, d, 
+								0, 0, 1 };
+			AffineTransform  at = new AffineTransform(mat);
+			
+			//Point2D p2d = new Point2D(1.0,1.0);
+			//modelToViewport(p);
+			//list.get(i).print();
+			list.set(i, new PointVisible(xp+400,yp+400));
+			System.out.println("Après la transfo : "+(xp+400)+", "+(yp+400));
+			//System.out.print("new point : ");
+			//new PointVisible(xp,yp).print();
 		}
 	}
 }

@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 
 import utils.go.Coordonees;
 import utils.go.PointVisible;
+import utils.go.Transformation;
 import utils.go.Vecteur;
 import utils.io.ReadWritePoint;
 
@@ -57,8 +58,12 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 		for (int i = 0 ; i < n; i++) {
 			aretes.add(new Vecteur(points.get(i), points.get((i+1)%n)));
 		}
-		Coordonees c = new Coordonees (0, 0,width, height);
-		c.upadteArrayPoint(points);
+//		Coordonees c = new Coordonees (0, 0, width, height);
+//		c.upadteArrayPoint(points);
+//		System.out.println("passe par ici");	
+//		this.repaint();
+		if(modelCoordinates == true) transforme();
+		
 	}
 	
 	public void export(String logFile) {
@@ -84,6 +89,28 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 		for (Vecteur v: aretes) {
 			v.dessine(g2d);
 		}		
+	}
+	
+	public void transforme(){
+		ArrayList<PointVisible> p = new ArrayList<PointVisible>();
+		Transformation t = new Transformation();
+		t.translation(-width, -height);
+		t.rotation(width, height);
+		t.translation(-width/2, -height);
+		t.symetrieY();
+		t.translation(-width, -height);
+		for(int i = 0; i < points.size(); i ++){
+			p.add(t.nouveauPoint(points.get(i)));
+		}
+		
+		setPoints(p);
+		aretes = new ArrayList<Vecteur>();
+		int n = points.size();
+		for (int i = 0 ; i < n; i++) {
+			aretes.add(new Vecteur(points.get(i), points.get((i+1)%n)));
+		}
+
+		repaint();
 	}
 
 	@Override
