@@ -1,13 +1,14 @@
 package utils.go;
 
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
-
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
 
 public class Coordonees extends AffineTransform  {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	int xmaxmodel;
 	int xminmodel;
 	int ymaxmodel;
@@ -55,6 +56,8 @@ public class Coordonees extends AffineTransform  {
 	}
 	
 	void CalculCoeffMatTransfo() { // ou utiliser delta transform de la classe AffineTRansform
+		
+		// modele -> viewport
 		a = ( w / (xmaxmodel - xminmodel));
 		b = x0ecran - ((xminmodel * w) / (xmaxmodel - xminmodel));
 		c = h / (xminmodel - xmaxmodel);
@@ -62,37 +65,35 @@ public class Coordonees extends AffineTransform  {
 		System.out.println("Calcul mat tranfo...");
 		
 		/* viewport -> modele 
-		a = (xmaxmodel - xminmodel)/w
-		b = ????
-		c = ????
-		d = ????
+		 * 
+		*
 		*/
 	}
+//	
+//	void calculViewPortToModel () {
+//		a = (xmaxmodel - xminmodel)/w
+//		b = xminmodel - ( x0 * (xmaxmodel - xminmodel)) / w;
+//		c = (yminmodel - ymaxmodel) / h;
+//		d = ymaxmodel - y0 * (yminmodel - ymaxmodel) / h;
+//	}
 	
-	void modelToViewport(PointVisible p){
+	void modelToViewport(PointVisible p) {
 		this.xp = (int) (a*p.x+b);
 		this.yp = (int) (c*p.y + d);
 	}
 	
-	public void upadteArrayPoint(ArrayList<PointVisible> list) {
-		CalculMinMax(list);
-		CalculCoeffMatTransfo();
-
-		for(int i = 0; i<list.size(); i++) {
-			System.out.println("Point avant la transfo : "+list.get(i).x+", "+list.get(i).y);
-			PointVisible p = new PointVisible(list.get(i).x-400,list.get(i).y-400);
-			double[] mat =     {a, 0, b, 
-								0, c, d, 
-								0, 0, 1 };
-			AffineTransform  at = new AffineTransform(mat);
-			
-			//Point2D p2d = new Point2D(1.0,1.0);
-			//modelToViewport(p);
-			//list.get(i).print();
-			list.set(i, new PointVisible(xp+400,yp+400));
-			System.out.println("Après la transfo : "+(xp+400)+", "+(yp+400));
-			//System.out.print("new point : ");
-			//new PointVisible(xp,yp).print();
-		}
-	}
+//	public void upadteArrayPoint(ArrayList<PointVisible> list) {
+//		CalculMinMax(list);
+//		CalculCoeffMatTransfo();
+//		for(int i = 0; i<list.size(); i++) {
+//			System.out.println("Point avant la transfo : "+list.get(i).x+", "+list.get(i).y);
+//			PointVisible p = new PointVisible(list.get(i).x-400,list.get(i).y-400);
+//			double[] mat =     {a, 0, b, 
+//								0, c, d, 
+//								0, 0, 1 };
+//			AffineTransform  at = new AffineTransform(mat);
+//			list.set(i, new PointVisible(xp+400,yp+400));
+//			System.out.println("Après la transfo : "+(xp+400)+", "+(yp+400));
+//		}
+//	}
 }

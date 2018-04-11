@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
-import utils.go.Coordonees;
 import utils.go.PointVisible;
 import utils.go.Transformation;
 import utils.go.Vecteur;
@@ -21,6 +20,10 @@ import utils.io.ReadWritePoint;
 
 
 public class Vue extends JPanel implements MouseListener, MouseMotionListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Color bgColor;
 	Color fgColor; 
 	int width, height;
@@ -44,6 +47,7 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 		if(!modelCoordinates)export("trio-hypo-2.csv");
 	}
 	
+	@SuppressWarnings("unused")
 	private void copyModelToViewportCoords() {
 		for(PointVisible p: points) {
 			p.copyModelToViewportCoords();
@@ -62,7 +66,7 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 //		c.upadteArrayPoint(points);
 //		System.out.println("passe par ici");	
 //		this.repaint();
-		if(modelCoordinates == true) transforme();
+		//if(modelCoordinates == true) transforme();
 		
 	}
 	
@@ -94,11 +98,13 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 	public void transforme(){
 		ArrayList<PointVisible> p = new ArrayList<PointVisible>();
 		Transformation t = new Transformation();
+		
 		t.translation(-width, -height);
 		t.rotation(width, height);
 		t.translation(-width/2, -height);
 		t.symetrieY();
 		t.translation(-width, -height);
+		
 		for(int i = 0; i < points.size(); i ++){
 			p.add(t.nouveauPoint(points.get(i)));
 		}
@@ -115,6 +121,20 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		PointVisible p = new PointVisible(points.get(0).x,points.get(0).y);
+		p.x+=50;
+		p.y+=50;
+		p.add(p);
+		points.add(p);
+		setPoints(points);
+		aretes = new ArrayList<Vecteur>();
+		
+		int n = points.size();
+		for (int i = 0 ; i < n; i++) {
+			aretes.add(new Vecteur(points.get(i), points.get((i+1)%n)));
+		}
+		
+		repaint();
 	}
 
 	@Override
@@ -158,15 +178,15 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 		
 		repaint();
 	}
-
-
+	
+	
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		if (previousLocation != null) {
 			updateElasticRectangle(e.getX(), e.getY());
 		}
 	}
-
+	
 	@Override
 	public void mouseMoved(MouseEvent e) {
 	}	

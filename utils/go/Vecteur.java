@@ -59,6 +59,7 @@ public class Vecteur {
 		this.from = from;
 	}
 
+	@SuppressWarnings("unused")
 	private Vecteur copy() {
 		Vecteur v = new Vecteur(this.from.x, this.from.y, this.getTo().x, this.getTo().y);
 		return v;

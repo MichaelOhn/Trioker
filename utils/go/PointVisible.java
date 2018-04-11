@@ -9,6 +9,10 @@ import java.awt.geom.Point2D;
 import utils.aff.Couleur;
 
 public class PointVisible extends Rectangle {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static int midWidth = 5;
 	private Color color = Couleur.fg;
 	private String label;
