@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import utils.go.Coordonnees;
 import utils.go.PointVisible;
 import utils.go.Transformation;
 import utils.go.Vecteur;
@@ -31,6 +32,10 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 	private ArrayList<Vecteur> aretes = new ArrayList<Vecteur>();
 	Point initialLocation, previousLocation, newLocation;
 	Rectangle rectangleElastique;
+	Coordonnees Coord;
+	
+	int x0;
+	int y0;
 		
 	public Vue(int width, int height, String fileName, boolean modelCoordinates) {
 		super();
@@ -47,6 +52,55 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 		if(!modelCoordinates)export("trio-hypo-2.csv");
 	}
 	
+	private void coordonnee() {
+		//ReadWritePoint rw = new ReadWritePoint(fileName);
+		//points = rw.read();
+		aretes = new ArrayList<Vecteur>();
+		int n = points.size();
+		for (int i = 0 ; i < n; i++) {
+			aretes.add(new Vecteur(points.get(i), points.get((i+1)%n)));
+		}
+		Coord = new Coordonnees(MaxX(points),MaxY(points),MinX(points),MinY(points),width,height,0,0,points);
+	}
+	
+
+	public double MaxX(ArrayList<PointVisible> P){
+		double M = 0;
+		for (int i = 0; i < P.size(); i++){
+			if (P.get(i).getCenterX() > M){
+				M = P.get(i).getCenterX();
+			}
+		}
+		return M;
+	}
+	public double MaxY(ArrayList<PointVisible> P){
+		double M = 0;
+		for (int i = 0; i < P.size(); i++){
+			if (P.get(i).getCenterY() > M){
+				M = (double) P.get(i).getCenterY();
+			}
+		}
+		return M;
+	}
+	public double MinX(ArrayList<PointVisible> P){
+		double M = P.get(0).getCenterX() ;
+		for (int i = 0; i < P.size(); i++){
+			if (P.get(i).getCenterX() < M){
+				M = (double) P.get(i).getCenterX();
+			}
+		}
+		return M;
+	}
+	public double MinY(ArrayList<PointVisible> P){
+		double M = P.get(0).getCenterY();
+		for (int i = 0; i < P.size(); i++){
+			if (P.get(i).getCenterY() < M){
+				M = (double) P.get(i).getCenterY();
+			}
+		}
+		return M;
+	}
+	
 	@SuppressWarnings("unused")
 	private void copyModelToViewportCoords() {
 		for(PointVisible p: points) {
@@ -59,15 +113,11 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 		points = rw.read();
 		aretes = new ArrayList<Vecteur>();
 		int n = points.size();
+
 		for (int i = 0 ; i < n; i++) {
 			aretes.add(new Vecteur(points.get(i), points.get((i+1)%n)));
 		}
-//		Coordonees c = new Coordonees (0, 0, width, height);
-//		c.upadteArrayPoint(points);
-//		System.out.println("passe par ici");	
-//		this.repaint();
-		//if(modelCoordinates == true) transforme();
-		
+		Coord = new Coordonnees(MaxX(points),MaxY(points),MinX(points),MinY(points),width,height,0,0,points);
 	}
 	
 	public void export(String logFile) {
@@ -94,47 +144,10 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 			v.dessine(g2d);
 		}		
 	}
-	
-	public void transforme(){
-		ArrayList<PointVisible> p = new ArrayList<PointVisible>();
-		Transformation t = new Transformation();
-		
-		t.translation(-width, -height);
-		t.rotation(width, height);
-		t.translation(-width/2, -height);
-		t.symetrieY();
-		t.translation(-width, -height);
-		
-		for(int i = 0; i < points.size(); i ++){
-			p.add(t.nouveauPoint(points.get(i)));
-		}
-		
-		setPoints(p);
-		aretes = new ArrayList<Vecteur>();
-		int n = points.size();
-		for (int i = 0 ; i < n; i++) {
-			aretes.add(new Vecteur(points.get(i), points.get((i+1)%n)));
-		}
-
-		repaint();
-	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		PointVisible p = new PointVisible(points.get(0).x,points.get(0).y);
-		p.x+=50;
-		p.y+=50;
-		p.add(p);
-		points.add(p);
-		setPoints(points);
-		aretes = new ArrayList<Vecteur>();
-		
-		int n = points.size();
-		for (int i = 0 ; i < n; i++) {
-			aretes.add(new Vecteur(points.get(i), points.get((i+1)%n)));
-		}
-		
-		repaint();
+
 	}
 
 	@Override
@@ -143,6 +156,8 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
+		
+
 	}
 
 	@Override
@@ -157,6 +172,8 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 		updateElasticRectangle(e.getX(), e.getY());
 		previousLocation = null;
 		initialLocation = null;
+//		points.add(new PointVisible(rectangleElastique.width, rectangleElastique.height));
+		
 	}
 
 	private void updateElasticRectangle(int newX, int newY) {
@@ -164,6 +181,7 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 		int h = newY - initialLocation.y;
 		previousLocation.x = newX;
 		previousLocation.y = newY;		
+		int n = points.size();
 		
 		rectangleElastique.width = (w >=0)? w: -w;
 		rectangleElastique.height = (h >=0)? h: -h;
@@ -176,9 +194,26 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 			rectangleElastique.x = initialLocation.x +w;
 		}
 		
+		/*              
+		 * Les coordonnées de l'angle haut à gauche (les deux premier parametre de la méthode fenetre)
+		 * n'ont aucun sens, j'ai trouvé ça au pif en tatonnant... Je cherche une explication rationnelle !!!
+		 * En gros, si on ne rajoute pas ces deux termes bizarres en plus, l'hypocampe est décallé sur le dessus 
+		 *
+		 * ex (remplacer la ligne 215 par  :
+		 * Coord.Fenetre(rectangleElastique.x, rectangleElastique.y, rectangleElastique.width, rectangleElastique.height);
+		 *    // C'est ce qui devrait être le plus logique
+		 */
+		Coord.Fenetre(rectangleElastique.x+(int)(rectangleElastique.width/40), (int)rectangleElastique.y+(int)(rectangleElastique.height/3.2), rectangleElastique.width, rectangleElastique.height);
+		System.out.println("Point min : "+Coord.minY);
+		System.out.println("Point max : "+Coord.maxY);
+	
+		Coord.ModeleViewPort();
+		
+		// Si on veut faire la symétrie :
+		//Coord.Symetrie(rectangleElastique.x+rectangleElastique.width/2);
+		
 		repaint();
 	}
-	
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {
