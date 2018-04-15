@@ -6,22 +6,29 @@ public class Vecteur {
 	private PointVisible from;
 	private PointVisible to;
 	public String label;
+	
+	int x;
+	int y;
 
 	public Vecteur(PointVisible f, PointVisible t) {
 		from = f;
 		to = t;
+		x = this.getX();
+		y = this.getY();
 	}
 
 	public Vecteur(int x, int y, int x2, int y2) {
 		from = new PointVisible(x,y);
-		to = new PointVisible(x2,y2);		
+		to = new PointVisible(x2,y2);	
+		x = this.getX();
+		y = this.getY();
 	}
 
-	public int norme1() {
+	public double norme() {
 		int x1,y1;
 		x1 = this.getTo().x - this.from.x ;
 		y1 = this.getTo().y - this.from.y ;
-		return  x1*x1 + y1*y1;
+		return  Math.sqrt(x1*x1 + y1*y1);
 	}
 	
 	public void setLabel(String label) {
@@ -71,5 +78,14 @@ public class Vecteur {
 
 	public void setTo(PointVisible to) {
 		this.to = to;
+	}
+	public void normalize() {
+		x= (int) (getX()/norme());
+		y= (int) (getY()/norme());
+	}
+	
+	
+	public double scalaire(Vecteur CD) {
+		return x*CD.x+y*CD.y;
 	}
 }
