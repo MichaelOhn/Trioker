@@ -79,16 +79,16 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 
 	}
 	
-	private void coordonnee() {
-		//ReadWritePoint rw = new ReadWritePoint(fileName);
-		//points = rw.read();
-		aretes = new ArrayList<Vecteur>();
-		int n = points.size();
-		for (int i = 0 ; i < n; i++) {
-			aretes.add(new Vecteur(points.get(i), points.get((i+1)%n)));
-		}
-		Coord = new Coordonnees(MaxX(points),MaxY(points),MinX(points),MinY(points),width,height,0,0,points);
-	}
+//	private void coordonnee() {
+//		//ReadWritePoint rw = new ReadWritePoint(fileName);
+//		//points = rw.read();
+//		aretes = new ArrayList<Vecteur>();
+//		int n = points.size();
+//		for (int i = 0 ; i < n; i++) {
+//			aretes.add(new Vecteur(points.get(i), points.get((i+1)%n)));
+//		}
+//		Coord = new Coordonnees(MaxX(points),MaxY(points),MinX(points),MinY(points),width,height,0,0,points);
+//	}
 
 	public double MaxX(ArrayList<PointVisible> P){
 		double M = 0;
@@ -248,9 +248,7 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 		previousLocation = new Point(e.getX(), e.getY());
 		
 		PointVisible p = new PointVisible(e.getX(), e.getY());
-		PointVisible p1 = new PointVisible(0, 0);
-		PointVisible p2 = new PointVisible(0, 10);
-		Vecteur v = new Vecteur(p1, p2);
+
 		for(int i= 0; i < PiecesList.size(); i++) {
 			if(PiecesList.get(i).insideTriangle(p) == true) {
 				System.out.println("Clic dans le triangle" + PiecesList.get(i).toString());
@@ -267,44 +265,44 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 		
 	}
 
-	private void updateElasticRectangle(int newX, int newY) {
-		int w = newX - initialLocation.x;
-		int h = newY - initialLocation.y;
-		previousLocation.x = newX;
-		previousLocation.y = newY;		
-		int n = points.size();
-		
-		rectangleElastique.width = (w >=0)? w: -w;
-		rectangleElastique.height = (h >=0)? h: -h;
-		
-		if (h < 0) {
-			rectangleElastique.y = initialLocation.y +h;
-		}
-
-		if (w < 0) {
-			rectangleElastique.x = initialLocation.x +w;
-		}
-		
-		/*              
-		 * Les coordonnées de l'angle haut à gauche (les deux premier parametre de la méthode fenetre)
-		 * n'ont aucun sens, j'ai trouvé ça au pif en tatonnant... Je cherche une explication rationnelle !!!
-		 * En gros, si on ne rajoute pas ces deux termes bizarres en plus, l'hypocampe est décallé sur le dessus 
-		 *
-		 * ex (remplacer la ligne 215 par  :
-		 * Coord.Fenetre(rectangleElastique.x, rectangleElastique.y, rectangleElastique.width, rectangleElastique.height);
-		 *    // C'est ce qui devrait être le plus logique
-		 */
-//		Coord.Fenetre(rectangleElastique.x+(int)(rectangleElastique.width/40), (int)rectangleElastique.y+(int)(rectangleElastique.height/3.2), rectangleElastique.width, rectangleElastique.height);
-//		System.out.println("Point min : "+Coord.minY);
-//		System.out.println("Point max : "+Coord.maxY);
+//	private void updateElasticRectangle(int newX, int newY) {
+//		int w = newX - initialLocation.x;
+//		int h = newY - initialLocation.y;
+//		previousLocation.x = newX;
+//		previousLocation.y = newY;		
+//		int n = points.size();
+//		
+//		rectangleElastique.width = (w >=0)? w: -w;
+//		rectangleElastique.height = (h >=0)? h: -h;
+//		
+//		if (h < 0) {
+//			rectangleElastique.y = initialLocation.y +h;
+//		}
 //
-//		Coord.ModeleViewPort();
-		
-		// Si on veut faire la symétrie :
-		//Coord.Symetrie(rectangleElastique.x+rectangleElastique.width/2);
-		
-		repaint();
-	}
+//		if (w < 0) {
+//			rectangleElastique.x = initialLocation.x +w;
+//		}
+//		
+//		/*              
+//		 * Les coordonnées de l'angle haut à gauche (les deux premier parametre de la méthode fenetre)
+//		 * n'ont aucun sens, j'ai trouvé ça au pif en tatonnant... Je cherche une explication rationnelle !!!
+//		 * En gros, si on ne rajoute pas ces deux termes bizarres en plus, l'hypocampe est décallé sur le dessus 
+//		 *
+//		 * ex (remplacer la ligne 215 par  :
+//		 * Coord.Fenetre(rectangleElastique.x, rectangleElastique.y, rectangleElastique.width, rectangleElastique.height);
+//		 *    // C'est ce qui devrait être le plus logique
+//		 */
+////		Coord.Fenetre(rectangleElastique.x+(int)(rectangleElastique.width/40), (int)rectangleElastique.y+(int)(rectangleElastique.height/3.2), rectangleElastique.width, rectangleElastique.height);
+////		System.out.println("Point min : "+Coord.minY);
+////		System.out.println("Point max : "+Coord.maxY);
+////
+////		Coord.ModeleViewPort();
+//		
+//		// Si on veut faire la symétrie :
+//		//Coord.Symetrie(rectangleElastique.x+rectangleElastique.width/2);
+//		
+//		repaint();
+//	}
 	
 	@Override
 	public void mouseDragged(MouseEvent e) {

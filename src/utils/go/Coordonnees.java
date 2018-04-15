@@ -1,9 +1,5 @@
 package utils.go;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 
 // Nouvelle classe Coordonnees (l'autre avait une faute dans le nom!!!)
