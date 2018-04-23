@@ -30,5 +30,4 @@ public class Transformation {
 		PointVisible pp = new PointVisible((int)x, (int)y);
 		return(pp);
 	}
-	
 }
