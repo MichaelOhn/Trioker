@@ -3,8 +3,10 @@ package utils.go;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-public class Triangle {
+import utils.aff.Vue;
 
+public class Triangle {
+	private Repere repere;
 	private ArrayList<PointVisible> sommets = new ArrayList<PointVisible>();
 	private ArrayList<Vecteur> aretes = new ArrayList<Vecteur>();
 	private double angle = 0;
@@ -22,6 +24,11 @@ public class Triangle {
 		this.sommets.add(b);
 		this.sommets.add(c);
 	}
+	public Triangle(PointVisible a, PointVisible b , PointVisible c , Repere repere) {
+		this(a,b,c);
+		this.repere = repere;
+		
+	}
 
 	public void draw(Graphics2D g2d) {
 		
@@ -34,6 +41,7 @@ public class Triangle {
 		for (Vecteur v: aretes) {
 			v.dessine(g2d);
 		}	
+		
 	}
 	@Override
 	public String toString() {
@@ -113,6 +121,13 @@ public class Triangle {
 		
 		ccc = new PointVisible((int)OCx,(int)OCy);
 		rayon = Math.abs(new Vecteur(sommets.get(0),ccc).norme());
+	}
+	
+	public void suitTrajectoire(Repere repereFrenel ,int t)
+	{
+		
+		
+		
 	}
 	
 }

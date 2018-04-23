@@ -15,7 +15,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import utils.go.Coordonnees;
+import utils.go.Frenet;
 import utils.go.PointVisible;
+import utils.go.Repere;
 import utils.go.Triangle;
 import utils.go.Vecteur;
 import utils.io.ReadWritePoint;
@@ -26,6 +28,7 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static long t=-1; 
 	Color bgColor;
 	Color fgColor; 
 	int width, height;
@@ -37,12 +40,23 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 	Coordonnees Coord;
 	Coordonnees Coord2;
 	ArrayList<Triangle> PiecesList; // liste des pieces du trioker
-	ArrayList<Triangle> PosWinList; // liste de triangles où la position est gagnante
+	ArrayList<Triangle> PosWinList; // liste de triangles oï¿½ la position est gagnante
+	ArrayList<Repere> reperesFrenet ;
 	Triangle Selectedpiece = null;
 	
 	int x0;
 	int y0;
 		
+	public static void incTime()
+	{
+		t++;
+	}
+	public static long getTime()
+	{
+		return t;
+	}
+	
+	
 	public Vue(int width, int height, String fileName1,String fileName2, boolean modelCoordinates) {
 		super();
 		Couleur.forPrinter(true);
@@ -56,7 +70,7 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 		this.addMouseMotionListener(this);
 		initFromLog(fileName1,fileName2, modelCoordinates); 
 		if(!modelCoordinates)export("trio-hypo-2.csv");
-		JLabel text1 = new JLabel("Zone des pièces");
+		JLabel text1 = new JLabel("Zone des piï¿½ces");
 		JLabel text2 = new JLabel("Zone de jeu, positions gagnantes");
 		text1.setBounds(50, 30, 200, 50);
 		this.add(text1);
@@ -64,19 +78,27 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 		this.add(text2);
 		this.setLayout(null);
 		
-		// Trace zone init pièces
-		points = new ArrayList<PointVisible>();
-		points.add(new PointVisible(10,  0));
-		points.add(new PointVisible(1000,  0));
-		points.add(new PointVisible(1000, 1000));
-		points.add(new PointVisible(10, 1000));
-		points.add(new PointVisible(1000/2, 1000));
-		points.add(new PointVisible(1000/2, 0));
-		int n = points.size();
-		for (int i = 0 ; i < n; i++) {
-			aretes.add(new Vecteur(points.get(i), points.get((i+1)%n)));
-		}
+		// Trace zone init piï¿½ces
+		
+		
 
+		
+		reperesFrenet = new ArrayList<Repere>();
+		reperesFrenet.add(Frenet.genRepere("sin", Vue.getTime(), points.get(0)));
+		points = new ArrayList<PointVisible>();
+		repaint();
+		
+//		points.add(new PointVisible(10,  0));
+//		points.add(new PointVisible(1000,  0));
+//		points.add(new PointVisible(1000, 1000));
+//		points.add(new PointVisible(10, 1000));
+//		points.add(new PointVisible(1000/2, 1000));
+//		points.add(new PointVisible(1000/2, 0));
+//		int n = points.size();
+//		for (int i = 0 ; i < n; i++) {
+//			aretes.add(new Vecteur(points.get(i), points.get((i+1)%n)));
+//		}
+		
 	}
 	
 //	private void coordonnee() {
@@ -160,10 +182,12 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 		Coord.ModeleViewPort();
 		Coord2.ModeleViewPort();
 		
-		// Si on veut faire la symétrie :
+		
+		// Si on veut faire la symï¿½trie :
 		//Coord.Symetrie(rectangleElastique.x+rectangleElastique.width/2);
 		
-		repaint();
+		
+		
 	}
 	
 	public void export(String logFile) {
@@ -208,14 +232,31 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 		}
 		
 		// traces positions gagnantes
-		for(int i = 0; i< PosWinList.size(); i++) {
-			PosWinList.get(i).draw(g2d);
-			//System.out.println("Draw triangle pos win ");
-		}
+//		for(int i = 0; i< PosWinList.size(); i++) {
+//			PosWinList.get(i).draw(g2d);
+//			//System.out.println("Draw triangle pos win ");
+//		}
 		for(int i = 0; i< PiecesList.size(); i++) {
 			PiecesList.get(i).draw(g2d);
 			//System.out.println("Draw triangle pos win ");
 		}
+		
+		ArrayList<PointVisible> pointsReperes = new ArrayList<PointVisible>();
+		
+		
+		for(int  i=0 ; i < reperesFrenet.size(); i++)
+		{
+			for(int j = 0 ; j < reperesFrenet.get(i).getVecs().size(); j++)
+			{
+				
+				pointsReperes.add(reperesFrenet.get(i).getVecs().get(j).getFrom());
+				pointsReperes.add(reperesFrenet.get(i).getVecs().get(j).getTo());
+			
+			}
+		}
+		Coord = new Coordonnees(width,height,0,0,width,height,0,0,pointsReperes);
+		Coord.ModeleViewPort();
+		
 	}	
 
 	@Override
@@ -284,13 +325,13 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 //		}
 //		
 //		/*              
-//		 * Les coordonnées de l'angle haut à gauche (les deux premier parametre de la méthode fenetre)
-//		 * n'ont aucun sens, j'ai trouvé ça au pif en tatonnant... Je cherche une explication rationnelle !!!
-//		 * En gros, si on ne rajoute pas ces deux termes bizarres en plus, l'hypocampe est décallé sur le dessus 
+//		 * Les coordonnï¿½es de l'angle haut ï¿½ gauche (les deux premier parametre de la mï¿½thode fenetre)
+//		 * n'ont aucun sens, j'ai trouvï¿½ ï¿½a au pif en tatonnant... Je cherche une explication rationnelle !!!
+//		 * En gros, si on ne rajoute pas ces deux termes bizarres en plus, l'hypocampe est dï¿½callï¿½ sur le dessus 
 //		 *
 //		 * ex (remplacer la ligne 215 par  :
 //		 * Coord.Fenetre(rectangleElastique.x, rectangleElastique.y, rectangleElastique.width, rectangleElastique.height);
-//		 *    // C'est ce qui devrait être le plus logique
+//		 *    // C'est ce qui devrait ï¿½tre le plus logique
 //		 */
 ////		Coord.Fenetre(rectangleElastique.x+(int)(rectangleElastique.width/40), (int)rectangleElastique.y+(int)(rectangleElastique.height/3.2), rectangleElastique.width, rectangleElastique.height);
 ////		System.out.println("Point min : "+Coord.minY);
@@ -298,7 +339,7 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 ////
 ////		Coord.ModeleViewPort();
 //		
-//		// Si on veut faire la symétrie :
+//		// Si on veut faire la symï¿½trie :
 //		//Coord.Symetrie(rectangleElastique.x+rectangleElastique.width/2);
 //		
 //		repaint();

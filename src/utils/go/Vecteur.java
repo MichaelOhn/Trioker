@@ -50,14 +50,14 @@ public class Vecteur {
 		to.dessine(g);
 	}
 	
-	public void dessine(,Graphics2D g) {
-		g.drawLine(getFrom().mtovX() , 
-				   getFrom().mtovY() , 
-		           getTo().mtovX(), 
-		           getTo().mtovY());
-//		drawLabel(g);
-		to.dessine(g);
-	}
+//	public void dessine(,Graphics2D g) {
+//		g.drawLine(getFrom().mtovX() , 
+//				   getFrom().mtovY() , 
+//		           getTo().mtovX(), 
+//		           getTo().mtovY());
+////		drawLabel(g);
+//		to.dessine(g);
+//	}
 	
 	public int getX(){
 		return getTo().x - getFrom().x;
@@ -70,7 +70,9 @@ public class Vecteur {
 	public PointVisible getFrom() {
 		return from;
 	}
-
+	
+	
+	
 	public void setFrom(PointVisible from) {
 		this.from = from;
 	}

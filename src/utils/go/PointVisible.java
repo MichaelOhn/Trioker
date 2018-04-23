@@ -31,7 +31,13 @@ public class PointVisible extends Rectangle {
 		this.P = new Point2D.Double((double) x, (double) y);
 		label = "p";
 	}
-
+		
+	public PointVisible(double x , double y)
+	{
+		super((int)x ,(int) y , 2 * PointVisible.midWidth, 2 * PointVisible.midWidth);
+		
+		this.P= new Point2D.Double((double) x , (double)y);
+	}
 	public void dessine(Graphics2D g2d) {
 		g2d.setColor(color);
 		g2d.fill(new Ellipse2D.Double(this.x - midWidth, this.y - midWidth, 2 * midWidth, 2 * midWidth));
