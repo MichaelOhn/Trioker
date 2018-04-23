@@ -61,7 +61,7 @@ public class PointVisible extends Rectangle {
 	public int mtovX(int x0 , int y0 , int w , int h , double maxX , double minX , double maxY , double minY)
 	{
 		double a = w / (maxX - minX);
-		double b =  x0 - w*minX/(maxX - minX);
+		double b =  x0 - (w*minX)/(maxX - minX);
 		double c = h /(minY - maxY);
 		double d = y0 - (h * maxY)/(minY - maxY);
 		

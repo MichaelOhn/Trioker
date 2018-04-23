@@ -91,6 +91,10 @@ public class Vue extends JPanel implements MouseListener, MouseMotionListener{
 		}		
 	}
 	
+	public void modelToView(Graphics g)
+	{
+	}
+	
 	public void transforme(){
 		ArrayList<PointVisible> p = new ArrayList<PointVisible>();
 		Transformation t = new Transformation();
