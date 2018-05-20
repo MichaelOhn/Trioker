@@ -7,8 +7,11 @@ public class Vecteur {
 	private PointVisible to;
 	public String label;
 	
-	int x;
-	int y;
+	double x;
+	double y;
+	
+	int xint;
+	int yint;
 
 	public Vecteur(PointVisible f, PointVisible t) {
 		from = f;
@@ -29,6 +32,13 @@ public class Vecteur {
 		x1 = this.getTo().x - this.from.x ;
 		y1 = this.getTo().y - this.from.y ;
 		return  Math.sqrt(x1*x1 + y1*y1);
+	}
+	
+	public double norme2() {
+		double x1,y1;
+		x1 = this.getTo().getX() - this.from.getX() ;
+		y1 = this.getTo().getY()- this.from.getY() ;
+		return Math.sqrt(x1*x1 + y1*y1);
 	}
 	
 	public void setLabel(String label) {
@@ -87,5 +97,9 @@ public class Vecteur {
 	
 	public double scalaire(Vecteur CD) {
 		return x*CD.x+y*CD.y;
+	}
+	
+	public boolean colineaire(Vecteur CD) {
+		return (this.getX()*CD.getY() - CD.getX()*this.getY() == 0);
 	}
 }

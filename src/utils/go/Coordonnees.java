@@ -39,23 +39,16 @@ public class Coordonnees extends AffineTransform{
 			this.y0 = Y;
 		}
 
-	
-		public ArrayList<PointVisible> ModeleViewPort(){
+		public void ModeleViewPort(){
 			double a = width/(maxX-minX);
 			double b = x0-minX*width/(maxX-minX);
 			double c = height/(minY-maxY);
 			double d = y0-height*maxX/(minY-maxY);
-			double xs;
-			double ys;
 			
 			for (int i = 0; i < points.size(); i++){
-				xs = points.get(i).getMC().x*a+b;
-				ys = points.get(i).getMC().y*c+d;
-				
-				points.get(i).x = (int) xs;
-				points.get(i).y = (int) ys;
+				points.get(i).x =  (int) (points.get(i).getMC().x*a+b);
+				points.get(i).y =   (int) (points.get(i).getMC().y*c+d);
 			}
-			return points;
 		}
 		
 		public ArrayList<PointVisible> Symetrie(int posmilieu) {

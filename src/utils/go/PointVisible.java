@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+
 import utils.aff.Couleur;
 
 public class PointVisible extends Rectangle {
@@ -16,7 +18,7 @@ public class PointVisible extends Rectangle {
 	private static int midWidth = 5;
 	private Color color = Couleur.fg;
 	private String label;
-	private Point2D.Double P; // coordonnées dans le modèle
+	public Point2D.Double P; // coordonnées dans le modèle
 
 	public void setLabel(String label) {
 		this.label = label;
@@ -99,5 +101,18 @@ public class PointVisible extends Rectangle {
 	public void homothetie(double r)
 	{
 		this.P.setLocation(this.P.getX() * r , this.P.getY() * r);
+	}
+	
+	public int testPointInRadius(Triangle tl) {
+			for(int j = 0 ; j<tl.sommets.size(); j++)
+			{
+				Vecteur v = new Vecteur(this,tl.sommets.get(j));
+				if(v.norme2()<=10)
+				{
+					System.out.println("BIM YOLO");
+					return j;
+				}
+			}
+		return -1;
 	}
 }
