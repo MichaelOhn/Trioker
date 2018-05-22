@@ -1,6 +1,7 @@
 package utils.go;
 
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.util.ArrayList;
 
 public class Triangle {
@@ -11,6 +12,7 @@ public class Triangle {
 	private double alphaSin,betaSin,gammaSin;
 	private double alphaCos,betaCos,gammaCos;
 	private PointVisible ccc; // centre cercle circonscrit
+	public boolean goodPos = false;
 	double rayon;
 	
 	int rayonX0 = 0;
@@ -19,6 +21,13 @@ public class Triangle {
 	int rayonY1 = 0;
 	int rayonX2 = 0;
 	int rayonY2= 0;
+	
+	double doublerayonX0 = 0;
+	double doublerayonY0 = 0;
+	double doublerayonX1 = 0;
+	double doublerayonY1 = 0;
+	double doublerayonX2 = 0;
+	double doublerayonY2= 0;
 	
 	public Triangle(ArrayList<PointVisible> sommets) {
 			this.sommets = sommets;
@@ -43,8 +52,14 @@ public class Triangle {
 			aretes.add(new Vecteur(sommets.get(i), sommets.get((i+1)%n)));
 			System.out.println("Norme : "+new Vecteur(sommets.get(i), sommets.get((i+1)%n)).norme());
 		}
+		Polygon P = new Polygon();
+		P.addPoint(sommets.get(0).x, (sommets.get(0).y));
+		P.addPoint(sommets.get(1).x, (sommets.get(1).y));
+		P.addPoint(sommets.get(2).x, (sommets.get(2).y));
+		g2d.fillPolygon(P);
 		for (Vecteur v: aretes) {
-			v.dessine(g2d);
+			v.dessineArete(g2d);
+			v.dessinePoints(g2d);
 		}	
 	}
 	@Override
@@ -80,39 +95,32 @@ public class Triangle {
 		angle = 90;
 		//sommets.add(ccc);		
 		System.out.println("Rayon = "+rayon);
-		rayonX0 = sommets.get(0).x - ccc.x;
-		rayonY0 = sommets.get(0).y - ccc.y;
 		
-		rayonX1 = sommets.get(1).x - ccc.x;
-		rayonY1 = sommets.get(1).y - ccc.y;
+		doublerayonX0 = sommets.get(0).getX() - ccc.getX();
+		doublerayonY0 = sommets.get(0).getY() - ccc.getY();
+		doublerayonX1 = sommets.get(1).getX() - ccc.getX();
+		doublerayonY1 = sommets.get(1).getY() - ccc.getY();
 		
-		rayonX2 = sommets.get(2).x - ccc.x;
-		rayonY2 = sommets.get(2).y - ccc.y;
+		doublerayonX2 = sommets.get(2).getX() - ccc.getX();
+		doublerayonY2 = sommets.get(2).getY() - ccc.getY();
 
-		sommets.get(0).x =  (int) (ccc.x + ( (rayonX0)* Math.cos(Math.toRadians(angle)) - (rayonY0) * Math.sin(Math.toRadians(angle))));
-		sommets.get(0).y =  (int) (ccc.y + ( (rayonX0)* Math.sin(Math.toRadians(angle)) + (rayonY0) * Math.cos(Math.toRadians(angle))));
+		sommets.get(0).P.x = (ccc.getX() + ( (doublerayonX0)* Math.cos(Math.toRadians(angle)) - (doublerayonY0) * Math.sin(Math.toRadians(angle))));
+		sommets.get(0).P.y =  (ccc.getY() + ( (doublerayonX0)* Math.sin(Math.toRadians(angle)) + (doublerayonY0) * Math.cos(Math.toRadians(angle))));
 	
-    	sommets.get(1).x =  (int) (ccc.x + ( (rayonX1)* Math.cos(Math.toRadians(angle)) - (rayonY1) * Math.sin(Math.toRadians(angle))));
-		sommets.get(1).y =  (int) (ccc.y + ( (rayonX1)* Math.sin(Math.toRadians(angle)) + (rayonY1) * Math.cos(Math.toRadians(angle))));
+    	sommets.get(1).P.x  = (ccc.getX() + ( (doublerayonX1)* Math.cos(Math.toRadians(angle)) - (doublerayonY1) * Math.sin(Math.toRadians(angle))));
+		sommets.get(1).P.y =   (ccc.getY() + ( (doublerayonX1)* Math.sin(Math.toRadians(angle)) + (doublerayonY1) * Math.cos(Math.toRadians(angle))));
 
-		sommets.get(2).x =  (int) (ccc.x + ( (rayonX2)* Math.cos(Math.toRadians(angle)) - (rayonY2) * Math.sin(Math.toRadians(angle))));
-		sommets.get(2).y =  (int) (ccc.y + ( (rayonX2)* Math.sin(Math.toRadians(angle)) + (rayonY2) * Math.cos(Math.toRadians(angle))));
+		sommets.get(2).P.x  =  (ccc.getX() + ( (doublerayonX2)* Math.cos(Math.toRadians(angle)) - (doublerayonY2) * Math.sin(Math.toRadians(angle))));
+		sommets.get(2).P.y =   (ccc.getY() + ( (doublerayonX2)* Math.sin(Math.toRadians(angle)) + (doublerayonY2) * Math.cos(Math.toRadians(angle))));
 		
+		sommets.get(0).x = (int) sommets.get(0).P.x;
+		sommets.get(0).y =  (int) sommets.get(0).P.y;
+	
+    	sommets.get(1).x  =(int) sommets.get(1).P.x;
+		sommets.get(1).y = (int) sommets.get(1).P.y;
+		sommets.get(2).x  = (int) sommets.get(2).P.x;
+		sommets.get(2).y = (int) sommets.get(2).P.y;
 		
-//		sommets.get(0).getMC().x =   (ccc.getMC().x + ( (sommets.get(0).getMC().x - ccc.getMC().x)* Math.cos(Math.toRadians(angle)) - (sommets.get(0).getMC().y - ccc.getMC().y) * Math.sin(Math.toRadians(angle))));
-//		sommets.get(0).getMC().y =  (ccc.getMC().y + ( (sommets.get(0).getMC().x - ccc.getMC().x)* Math.sin(Math.toRadians(angle)) + (sommets.get(0).getMC().y - ccc.getMC().y) * Math.cos(Math.toRadians(angle))));
-//
-//    	sommets.get(1).getMC().x =   (ccc.getMC().x + ( (sommets.get(1).getMC().x - ccc.getMC().x)* Math.cos(Math.toRadians(angle)) - (sommets.get(1).getMC().y - ccc.getMC().y) * Math.sin(Math.toRadians(angle))));
-//		sommets.get(1).getMC().y =  (ccc.getMC().y + ( (sommets.get(1).getMC().x - ccc.getMC().x)* Math.sin(Math.toRadians(angle)) + (sommets.get(1).getMC().y - ccc.getMC().y) * Math.cos(Math.toRadians(angle))));
-//		
-//		sommets.get(2).getMC().x =  (ccc.getMC().x + ( (sommets.get(2).getMC().x - ccc.getMC().x)* Math.cos(Math.toRadians(angle)) - (sommets.get(2).getMC().y - ccc.getMC().y) * Math.sin(Math.toRadians(angle))));
-//		sommets.get(2).getMC().y = (ccc.getMC().y + ( (sommets.get(2).getMC().x - ccc.getMC().x)* Math.sin(Math.toRadians(angle)) + (sommets.get(2).getMC().y - ccc.getMC().y) * Math.cos(Math.toRadians(angle))));
-//		
-//		int width = 1000,height = 1000;
-//		Coordonnees Coord = new Coordonnees(width,height,0,0,width,height,0,0,sommets);
-//		Coord.Fenetre(10,-10, width, height);
-//		Coord.ModeleViewPort();
-    	
 	}
 	
 	public double sin(PointVisible A, PointVisible B, PointVisible C) {
@@ -146,7 +154,7 @@ public class Triangle {
 		double OCx = (OCxbary*sommets.get(0).x+OCybary*sommets.get(1).x+OCzbary*sommets.get(2).x)/(OCxbary+OCybary+OCzbary);
 		double OCy = (OCxbary*sommets.get(0).y+OCybary*sommets.get(1).y+OCzbary*sommets.get(2).y)/(OCxbary+OCybary+OCzbary);
 		
-		ccc = new PointVisible((int)OCx,(int)OCy);
+		ccc = new PointVisible(OCx,OCy);
 		rayon = Math.abs(new Vecteur(sommets.get(0),ccc).norme());
 	}
 	

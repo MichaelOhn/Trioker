@@ -1,4 +1,6 @@
 package utils.go;
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
@@ -58,6 +60,18 @@ public class Vecteur {
 		g.drawLine((int) getFrom().x , (int) getFrom().y , (int) getTo().x, (int) getTo().y);
 //		drawLabel(g);
 		to.dessine(g);
+	}
+	
+	public void dessineArete(Graphics2D g) {
+		g.setColor(Color.red);
+		g.setStroke(new BasicStroke(6));
+		g.drawLine((int) getFrom().x , (int) getFrom().y , (int) getTo().x, (int) getTo().y);
+//		drawLabel(g);
+		//to.dessine(g);
+	}
+	public void dessinePoints(Graphics2D g) {
+		to.dessine(g);
+		from.dessine(g);
 	}
 
 	public int getX(){
